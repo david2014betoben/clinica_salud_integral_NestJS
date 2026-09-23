@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { Role } from '../generated/prisma/enums.js';
 
