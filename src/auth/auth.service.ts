@@ -3,10 +3,14 @@ import * as bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { Role } from '../generated/prisma/enums.js';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async register(email: string, password: string, role: Role) {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -22,10 +26,14 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
+
+    const secret = this.configService.getOrThrow<string>('JWT_SECRET');
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET as string,
-      { expiresIn: '8h' },
+      secret,
+      {
+        expiresIn: '8h',
+      },
     );
     return { token };
   }
