@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { CreatePacienteDto } from './dto/create-paciente.dto.js';
+import { UpdatePacienteDto } from './dto/update-paciente.dto.js';
 
 @Injectable()
 export class PacientesService {
@@ -15,35 +17,28 @@ export class PacientesService {
     });
   }
 
-  create(data: {
-    nombre: string;
-    ap_paterno: string;
-    ap_materno?: string;
-    email?: string;
-    telefono?: string;
-    fecha_nacimiento?: Date;
-  }) {
+  create(data: CreatePacienteDto) {
     return this.prisma.paciente.create({
-      data,
+      data: {
+        ...data,
+        fecha_nacimiento: data.fecha_nacimiento
+          ? new Date(data.fecha_nacimiento)
+          : undefined,
+      },
     });
   }
 
-  update(
-    id: number,
-    data: {
-      nombre?: string;
-      ap_paterno?: string;
-      ap_materno?: string;
-      email?: string;
-      telefono?: string;
-      fecha_nacimiento?: Date;
-    },
-  ) {
+  update(id: number, data: UpdatePacienteDto) {
     return this.prisma.paciente.update({
       where: {
         id,
       },
-      data,
+      data: {
+        ...data,
+        fecha_nacimiento: data.fecha_nacimiento
+          ? new Date(data.fecha_nacimiento)
+          : undefined,
+      },
     });
   }
 
