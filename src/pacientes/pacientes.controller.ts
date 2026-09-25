@@ -4,6 +4,7 @@ import {
   Body,
   Delete,
   NotFoundException,
+  BadRequestException,
   Param,
   Post,
   Put,
@@ -46,6 +47,12 @@ export class PacientesController {
   @ApiOperation({ summary: 'Agregar un nuevo paciente' })
   @Post()
   create(@Body() dto: CreatePacienteDto) {
+    if (dto.fecha_nacimiento && new Date(dto.fecha_nacimiento) > new Date()) {
+      throw new BadRequestException(
+        'La fecha de nacimiento no puede ser futura',
+      );
+    }
+
     return this.pacientesService.create(dto);
   }
 
@@ -56,6 +63,12 @@ export class PacientesController {
 
     if (!paciente) {
       throw new NotFoundException(`Paciente con ID ${id} no encontrado`);
+    }
+
+    if (dto.fecha_nacimiento && new Date(dto.fecha_nacimiento) > new Date()) {
+      throw new BadRequestException(
+        'La fecha de nacimiento no puede ser futura',
+      );
     }
 
     return this.pacientesService.update(Number(id), dto);

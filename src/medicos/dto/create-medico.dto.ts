@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsInt,
@@ -10,8 +11,13 @@ import {
 } from 'class-validator';
 
 export class CreateMedicoDto {
-  @IsString({ message: 'El nombre debe ser una cadena de texto' })
-  @IsNotEmpty({ message: 'El nombre es obligatorio' })
+  @ApiProperty({ example: 'Gabriela' })
+  @IsString({
+    message: 'El nombre debe ser una cadena de texto',
+  })
+  @IsNotEmpty({
+    message: 'El nombre es obligatorio',
+  })
   @MinLength(2, {
     message: 'El nombre debe tener al menos 2 caracteres',
   })
@@ -20,6 +26,7 @@ export class CreateMedicoDto {
   })
   nombre: string;
 
+  @ApiProperty({ example: 'Paredes' })
   @IsString({
     message: 'El apellido paterno debe ser una cadena de texto',
   })
@@ -34,6 +41,7 @@ export class CreateMedicoDto {
   })
   ap_paterno: string;
 
+  @ApiProperty({ example: 'Salazar' })
   @IsOptional()
   @IsString({
     message: 'El apellido materno debe ser una cadena de texto',
@@ -46,6 +54,7 @@ export class CreateMedicoDto {
   })
   ap_materno?: string;
 
+  @ApiProperty({ example: 'gabriela.paredes@clinica.com' })
   @IsOptional()
   @IsEmail(
     {},
@@ -55,6 +64,7 @@ export class CreateMedicoDto {
   )
   email?: string;
 
+  @ApiProperty({ example: '76543210' })
   @IsOptional()
   @IsString({
     message: 'El teléfono debe ser una cadena de texto',
@@ -65,6 +75,7 @@ export class CreateMedicoDto {
   })
   telefono?: string;
 
+  @ApiProperty({ example: 2 })
   @IsInt({
     message: 'El ID de especialidad debe ser un número entero',
   })
